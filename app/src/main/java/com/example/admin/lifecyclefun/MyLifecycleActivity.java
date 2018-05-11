@@ -14,9 +14,10 @@ import android.util.Log;
 public class MyLifecycleActivity implements LifecycleObserver {
 
     private static final String TAG = "MyLifecycleActivity";
+    Context mCon;
 
      MyLifecycleActivity(Context con) {
-
+         this.mCon = con;
         ((AppCompatActivity)con).getLifecycle().addObserver(this);
 
     }
@@ -46,6 +47,13 @@ public class MyLifecycleActivity implements LifecycleObserver {
     public void myOnDestroy(){
         Log.e(TAG, "Called onDestroy");
 
+        // Remember to clear the reference to LifeCycle aware component
+        // This avoid memory leaks of the activity
+        ((AppCompatActivity) mCon).getLifecycle().removeObserver(this);
+        Log.e(TAG, "---- Removed observer here--- ");
+
+        Lifecycle.State currentState = ((AppCompatActivity)mCon).getLifecycle().getCurrentState();
+        Log.e(TAG, "Current state: " + currentState);
     }
 
 }
