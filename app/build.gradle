@@ -16,6 +16,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        targetCompatibility 1.8
+        sourceCompatibility 1.8
+    }
 }
 
 dependencies {
@@ -34,6 +38,8 @@ dependencies {
 
     // Gson
     implementation 'com.google.code.gson:gson:2.8.2'
+    // Gson convertor
+    compile 'com.squareup.retrofit2:converter-gson:2.3.0'
 
     //Networking
     implementation 'com.squareup.retrofit2:retrofit:2.4.0'

@@ -9,7 +9,12 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
 
+import com.example.admin.lifecyclefun.api.GithubService;
+import com.example.admin.lifecyclefun.models.Project;
+import com.example.admin.lifecyclefun.utils.Resource;
 import com.example.admin.lifecyclefun.viewmodels.FirstViewModel;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -22,15 +27,7 @@ public class MainActivity extends AppCompatActivity {
     TextView tvDataUpdate;
 
     MyLifecycleActivity myLifecycleActivity;
-    FirstViewModel firstViewModel;
-
-    private final Observer<String> dataObserver = new Observer<String>() {
-        @Override
-        public void onChanged(@Nullable String s) {
-            Log.e(TAG, s);
-            tvDataUpdate.setText(s);
-        }
-    };
+    public FirstViewModel firstViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,29 +38,25 @@ public class MainActivity extends AppCompatActivity {
         firstViewModel = ViewModelProviders.of(this).get(FirstViewModel.class);
         myLifecycleActivity = new MyLifecycleActivity(this);
 
-        // firstViewModel.fetchMainData().observe(this, dataObserver);
-
-        firstViewModel.fetchMainData().observe(this, dataObserver);
-
-        updateView();
     }
 
-    private void updateView() {
-        final Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                //Do something after 100ms
+    @Override
+    protected void onResume() {
+        super.onResume();
+        showProjects();
+    }
 
-                firstViewModel.addData("This String was added later");
-            }
-        }, 3000);
+    private void showProjects() {
 
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                firstViewModel.addData("This was the last updated");
-            }
-        }, 6000);
+        firstViewModel.getUserProjects("google").observe(this, listResource -> {
+            if (listResource != null && listResource.data!= null) {
+                for (Project project :
+                        listResource.data) {
+
+                    tvDataUpdate.append("\n" + listResource.data.indexOf(project) + " " +project.full_name );
+                    Log.e(TAG, project.full_name);
+                }
+            };
+        });
     }
 }

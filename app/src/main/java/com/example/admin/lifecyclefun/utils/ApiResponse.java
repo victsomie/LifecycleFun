@@ -6,6 +6,7 @@ import android.support.v4.util.ArrayMap;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -35,7 +36,7 @@ public class ApiResponse<T> {
     public final ErrorMessage errorMessage;
     @NonNull
     public final Map<String, String> links;
-    Gson gson = new Gson();
+    private Gson gson = new Gson();
 
     public ApiResponse(Throwable error) {
         code = 500;
